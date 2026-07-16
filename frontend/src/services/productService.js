@@ -4,12 +4,15 @@ const productService = {
   getAll: () => axiosClient.get('/products'),
   getById: (id) => axiosClient.get(`/products/${id}`),
   getByCategory: (categoryId) => axiosClient.get(`/products/category/${categoryId}`),
-  getPaged: ({ page = 0, size = 12, categoryId, keyword } = {}) => {
+  getPaged: ({ page = 0, size = 12, categoryId, keyword, minPrice, maxPrice, sort } = {}) => {
     const params = new URLSearchParams();
     params.append('page', page);
     params.append('size', size);
     if (categoryId) params.append('categoryId', categoryId);
     if (keyword) params.append('keyword', keyword);
+    if (minPrice !== undefined && minPrice !== null && minPrice !== '') params.append('minPrice', minPrice);
+    if (maxPrice !== undefined && maxPrice !== null && maxPrice !== '') params.append('maxPrice', maxPrice);
+    if (sort) params.append('sort', sort);
     return axiosClient.get(`/products/page?${params.toString()}`);
   },
   search: (keyword) => axiosClient.get(`/products/search?keyword=${keyword}`),

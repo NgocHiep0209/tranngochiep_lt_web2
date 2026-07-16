@@ -5,18 +5,18 @@ import { useAuth } from '../../contexts/AuthContext';
 
 function AdminLoginPage() {
   const navigate = useNavigate();
-  const { login, currentUser, isAdmin } = useAuth();
+  const { login, currentUser, canAccessAdminPanel } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Nếu đã đăng nhập là admin thì redirect
+  // Nếu đã đăng nhập là admin/thành viên thì redirect
   React.useEffect(() => {
-    if (currentUser && isAdmin()) {
+    if (currentUser && canAccessAdminPanel()) {
       navigate('/admin');
     }
-  }, [currentUser, isAdmin, navigate]);
+  }, [currentUser, canAccessAdminPanel, navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -43,8 +43,8 @@ function AdminLoginPage() {
     setLoading(true);
     try {
       const res = await customerService.login(form);
-      if (res.role !== 'ADMIN') {
-        setApiError('Tài khoản này không có quyền quản trị!');
+      if (res.role !== 'ADMIN' && res.role !== 'STAFF') {
+        setApiError('Tài khoản này không có quyền truy cập trang quản trị!');
         return;
       }
       login(res, res.token);
@@ -114,7 +114,9 @@ function AdminLoginPage() {
 
         <div className="admin-login-hint">
           <p>💡 Tài khoản mặc định:</p>
-          <code>admin@fashionstore.vn / admin123</code>
+          <code>admin@fashionstore.vn / admin123</code> (Admin)
+          <br />
+          <code>staff@fashionstore.vn / staff123</code> (Thành viên)
         </div>
 
         <div className="admin-login-footer">

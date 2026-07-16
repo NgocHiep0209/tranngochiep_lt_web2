@@ -39,7 +39,7 @@ function LoginPage() {
       // Lưu user + token vào AuthContext (không lưu password)
       login(res, res.token);
       // Redirect theo role
-      if (res.role === 'ADMIN') {
+      if (res.role === 'ADMIN' || res.role === 'STAFF') {
         navigate('/admin');
       } else {
         navigate('/');

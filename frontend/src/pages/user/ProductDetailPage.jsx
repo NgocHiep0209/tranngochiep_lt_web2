@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import productService from '../../services/productService';
 import { useCart } from '../../contexts/CartContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { useWishlist } from '../../contexts/WishlistContext';
+import ReviewSection from '../../components/user/ReviewSection';
 
 function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { isLoggedIn } = useAuth();
+  const { isFavorited, toggleWishlist } = useWishlist();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -27,6 +32,20 @@ function ProductDetailPage() {
   const handleAddToCart = () => {
     addToCart(product, quantity);
     alert(`Đã thêm ${quantity} "${product.name}" vào giỏ hàng!`);
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!isLoggedIn()) {
+      if (window.confirm('Bạn cần đăng nhập để lưu sản phẩm yêu thích. Đăng nhập ngay?')) {
+        navigate('/login');
+      }
+      return;
+    }
+    try {
+      await toggleWishlist(product.id);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (loading) {
@@ -133,10 +152,31 @@ function ProductDetailPage() {
               <button className="btn btn-primary btn-lg" onClick={handleAddToCart}>
                 🛒 Thêm vào giỏ hàng
               </button>
+              <button
+                type="button"
+                className={`btn btn-outline btn-lg wishlist-detail-btn ${isFavorited(product.id) ? 'active' : ''}`}
+                onClick={handleToggleWishlist}
+              >
+                {isFavorited(product.id) ? '❤️ Đã yêu thích' : '🤍 Yêu thích'}
+              </button>
+            </div>
+          )}
+
+          {product.stockQuantity === 0 && (
+            <div className="detail-add-cart">
+              <button
+                type="button"
+                className={`btn btn-outline btn-lg wishlist-detail-btn ${isFavorited(product.id) ? 'active' : ''}`}
+                onClick={handleToggleWishlist}
+              >
+                {isFavorited(product.id) ? '❤️ Đã yêu thích' : '🤍 Yêu thích'}
+              </button>
             </div>
           )}
         </div>
       </div>
+
+      <ReviewSection productId={id} />
     </div>
   );
 }

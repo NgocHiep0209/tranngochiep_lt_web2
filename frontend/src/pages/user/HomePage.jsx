@@ -3,26 +3,30 @@ import { Link } from 'react-router-dom';
 import productService from '../../services/productService';
 import categoryService from '../../services/categoryService';
 import bannerService from '../../services/bannerService';
+import wishlistService from '../../services/wishlistService';
 import ProductCard from '../../components/user/ProductCard';
 
 function HomePage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [banners, setBanners] = useState([]);
+  const [mostFavorited, setMostFavorited] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [prodRes, catRes, bannerRes] = await Promise.all([
+        const [prodRes, catRes, bannerRes, favRes] = await Promise.all([
           productService.getAll(),
           categoryService.getAll(),
           bannerService.getActive().catch(() => []),
+          wishlistService.getMostFavorited(8).catch(() => []),
         ]);
         setProducts(prodRes);
         setCategories(catRes);
         setBanners(bannerRes || []);
+        setMostFavorited(favRes || []);
       } catch (err) {
         console.error('Lỗi tải dữ liệu:', err);
       } finally {
@@ -201,6 +205,21 @@ function HomePage() {
           </div>
           <div className="products-grid">
             {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Most Favorited Products - dựa trên số lượt yêu thích thực tế */}
+      {mostFavorited.length > 0 && (
+        <section className="section products-section">
+          <div className="section-header">
+            <h2 className="section-title">❤️ Sản Phẩm Được Yêu Thích Nhất</h2>
+            <Link to="/products" className="section-link">Xem tất cả →</Link>
+          </div>
+          <div className="products-grid">
+            {mostFavorited.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

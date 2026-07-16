@@ -2,16 +2,19 @@ package com.example.fashionstore.config;
 
 import com.example.fashionstore.entity.Banner;
 import com.example.fashionstore.entity.Category;
+import com.example.fashionstore.entity.Coupon;
 import com.example.fashionstore.entity.Customer;
 import com.example.fashionstore.entity.Post;
 import com.example.fashionstore.entity.Product;
 import com.example.fashionstore.repository.BannerRepository;
 import com.example.fashionstore.repository.CategoryRepository;
+import com.example.fashionstore.repository.CouponRepository;
 import com.example.fashionstore.repository.CustomerRepository;
 import com.example.fashionstore.repository.PostRepository;
 import com.example.fashionstore.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -35,6 +38,8 @@ public class DataSeeder implements CommandLineRunner {
     private final BannerRepository bannerRepository;
     private final PostRepository postRepository;
     private final CustomerRepository customerRepository;
+    private final CouponRepository couponRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
@@ -43,6 +48,8 @@ public class DataSeeder implements CommandLineRunner {
         seedBanners();
         seedPosts();
         seedAdmin();
+        seedStaff();
+        seedCoupons();
     }
 
     private List<Category> seedCategories() {
@@ -164,6 +171,54 @@ public class DataSeeder implements CommandLineRunner {
         admin.setAddress("Trụ sở Fashion Store");
         admin.setRole("ADMIN");
         customerRepository.save(admin);
+    }
+
+    private void seedCoupons() {
+        if (couponRepository.count() > 0) {
+            return;
+        }
+        List<Coupon> coupons = List.of(
+                coupon("WELCOME10", "Giảm 10% cho đơn hàng đầu tiên", "PERCENT", 10d, 100000d, 200000d,
+                        null, LocalDateTime.now().plusMonths(6), null),
+                coupon("SALE50K", "Giảm ngay 50.000đ cho đơn từ 300.000đ", "FIXED", 50000d, null, 300000d,
+                        null, LocalDateTime.now().plusMonths(3), 200),
+                coupon("SUMMER2026", "Giảm 20% mùa hè, tối đa 150.000đ", "PERCENT", 20d, 150000d, 500000d,
+                        null, LocalDateTime.now().plusMonths(2), 100)
+        );
+        couponRepository.saveAll(coupons);
+    }
+
+    private Coupon coupon(String code, String description, String discountType, Double discountValue,
+                           Double maxDiscountAmount, Double minOrderAmount, LocalDateTime startDate,
+                           LocalDateTime endDate, Integer usageLimit) {
+        Coupon c = new Coupon();
+        c.setCode(code);
+        c.setDescription(description);
+        c.setDiscountType(discountType);
+        c.setDiscountValue(discountValue);
+        c.setMaxDiscountAmount(maxDiscountAmount);
+        c.setMinOrderAmount(minOrderAmount);
+        c.setStartDate(startDate);
+        c.setEndDate(endDate);
+        c.setUsageLimit(usageLimit);
+        c.setUsedCount(0);
+        c.setActive(true);
+        return c;
+    }
+
+    private void seedStaff() {
+        if (customerRepository.findByEmail("staff@fashionstore.vn").isPresent()) {
+            return;
+        }
+        Customer staff = new Customer();
+        staff.setFullName("Nhân Viên Quản Trị");
+        staff.setPhone("0900000001");
+        staff.setEmail("staff@fashionstore.vn");
+        // Mật khẩu: staff123 (mã hóa lúc khởi động bằng PasswordEncoder, không hardcode hash)
+        staff.setPassword(passwordEncoder.encode("staff123"));
+        staff.setAddress("Trụ sở Fashion Store");
+        staff.setRole("STAFF");
+        customerRepository.save(staff);
     }
 
     // ===== Helper factory methods =====

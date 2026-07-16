@@ -2,17 +2,17 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-// Bảo vệ route admin: chỉ cho ADMIN vào
+// Bảo vệ route admin: cho ADMIN và STAFF (nhân viên quản trị) vào
 // Nếu chưa đăng nhập → redirect về /admin/login
-// Nếu đã đăng nhập nhưng không phải ADMIN → redirect về /
+// Nếu đã đăng nhập nhưng không phải ADMIN/STAFF (VD: khách hàng USER) → redirect về /
 function AdminRoute({ children }) {
-  const { currentUser, isAdmin } = useAuth();
+  const { currentUser, canAccessAdminPanel } = useAuth();
 
   if (!currentUser) {
     return <Navigate to="/admin/login" replace />;
   }
 
-  if (!isAdmin()) {
+  if (!canAccessAdminPanel()) {
     return <Navigate to="/" replace />;
   }
 

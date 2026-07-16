@@ -136,6 +136,18 @@ function AdminDashboardPage() {
 
   const maxQuantity = Math.max(1, ...topProducts.map((p) => p.quantity));
 
+  // ===== Số đơn theo trạng thái (tính trên toàn bộ đơn, kể cả đã hủy) =====
+  const statusBreakdown = useMemo(() => {
+    const order = ['pending', 'confirmed', 'shipping', 'completed', 'cancelled'];
+    return order.map((key) => ({
+      key,
+      ...STATUS_LABELS[key],
+      count: allOrders.filter((o) => o.status === key).length,
+    }));
+  }, [allOrders]);
+
+  const maxStatusCount = Math.max(1, ...statusBreakdown.map((s) => s.count));
+
   const statCards = [
     { icon: '📦', label: 'Sản phẩm', value: stats.products, link: '/admin/products', color: '#6c63ff' },
     { icon: '🛒', label: 'Đơn hàng', value: stats.orders, link: '/admin/orders', color: '#f59e0b' },
@@ -242,6 +254,33 @@ function AdminDashboardPage() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Order status breakdown */}
+            <div className="dashboard-charts">
+              <div className="chart-card">
+                <div className="chart-card-header">
+                  <h2>📋 Số đơn theo trạng thái</h2>
+                </div>
+                <div className="top-products-list">
+                  {statusBreakdown.map((s) => (
+                    <div className="top-product-item" key={s.key}>
+                      <span className={`status-badge ${s.className}`}>{s.label}</span>
+                      <div className="top-product-info">
+                        <div className="top-product-bar-track">
+                          <div
+                            className="top-product-bar-fill"
+                            style={{ width: `${(s.count / maxStatusCount) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="top-product-qty">
+                        <strong>{s.count}</strong> đơn
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 

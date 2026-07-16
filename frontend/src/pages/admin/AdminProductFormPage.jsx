@@ -91,6 +91,10 @@ function AdminProductFormPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (uploading) {
+      alert('Ảnh đang được tải lên, vui lòng đợi upload xong rồi mới lưu.');
+      return;
+    }
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -252,14 +256,6 @@ function AdminProductFormPage() {
               <label>Ảnh sản phẩm</label>
               <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
               {uploading && <span> Đang tải ảnh lên...</span>}
-              <input
-                type="text"
-                name="imageUrl"
-                value={form.imageUrl}
-                onChange={handleChange}
-                placeholder="Hoặc dán link ảnh trực tiếp"
-                style={{ marginTop: 8 }}
-              />
               {form.imageUrl && (
                 <img
                   src={form.imageUrl}
@@ -281,8 +277,8 @@ function AdminProductFormPage() {
             </div>
 
             <div className="form-actions">
-              <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
-                {loading ? 'Đang lưu...' : (isEdit ? '💾 Cập nhật' : '➕ Thêm sản phẩm')}
+              <button type="submit" className="btn btn-primary btn-lg" disabled={loading || uploading}>
+                {uploading ? 'Đang tải ảnh lên...' : loading ? 'Đang lưu...' : (isEdit ? '💾 Cập nhật' : '➕ Thêm sản phẩm')}
               </button>
               <button
                 type="button"

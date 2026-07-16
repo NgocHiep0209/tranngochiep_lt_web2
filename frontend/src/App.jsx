@@ -2,7 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { CartProvider } from './contexts/CartContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { WishlistProvider } from './contexts/WishlistContext';
 import AdminRoute from './components/AdminRoute';
+import AdminOnlyRoute from './components/AdminOnlyRoute';
 
 // === User Layout Components ===
 import Header from './components/user/Header';
@@ -19,6 +21,9 @@ import RegisterPage from './pages/user/RegisterPage';
 import PostsPage from './pages/user/PostsPage';
 import PostDetailPage from './pages/user/PostDetailPage';
 import MyOrdersPage from './pages/user/MyOrdersPage';
+import OrderDetailPage from './pages/user/OrderDetailPage';
+import WishlistPage from './pages/user/WishlistPage';
+import ProfilePage from './pages/user/ProfilePage';
 
 
 // === Admin Pages ===
@@ -33,9 +38,13 @@ import AdminCustomerFormPage from './pages/admin/AdminCustomerFormPage';
 import AdminBannersPage from './pages/admin/AdminBannersPage';
 import AdminBannerFormPage from './pages/admin/AdminBannerFormPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminCouponsPage from './pages/admin/AdminCouponsPage';
+import AdminCouponFormPage from './pages/admin/AdminCouponFormPage';
 import AdminPostsPage from './pages/admin/AdminPostsPage';
 import AdminPostFormPage from './pages/admin/AdminPostFormPage';
 import AdminReviewsPage from './pages/admin/AdminReviewsPage';
+import AdminChatPage from './pages/admin/AdminChatPage';
+import ChatWidget from './components/user/ChatWidget';
 
 import './style.css';
 
@@ -48,6 +57,7 @@ function UserLayout() {
         <Outlet />
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
@@ -66,6 +76,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
+        <WishlistProvider>
           <Routes>
             {/* ===== TRANG ADMIN LOGIN (không cần đăng nhập, không có header user) ===== */}
             <Route path="/admin/login" element={<AdminLoginPage />} />
@@ -79,17 +90,21 @@ function App() {
               <Route path="categories" element={<AdminCategoriesPage />} />
               <Route path="categories/create" element={<AdminCategoryFormPage />} />
               <Route path="categories/edit/:id" element={<AdminCategoryFormPage />} />
-              <Route path="customers" element={<AdminCustomersPage />} />
-              <Route path="customers/create" element={<AdminCustomerFormPage />} />
-              <Route path="customers/edit/:id" element={<AdminCustomerFormPage />} />
+              <Route path="customers" element={<AdminOnlyRoute><AdminCustomersPage /></AdminOnlyRoute>} />
+              <Route path="customers/create" element={<AdminOnlyRoute><AdminCustomerFormPage /></AdminOnlyRoute>} />
+              <Route path="customers/edit/:id" element={<AdminOnlyRoute><AdminCustomerFormPage /></AdminOnlyRoute>} />
               <Route path="banners" element={<AdminBannersPage />} />
               <Route path="banners/create" element={<AdminBannerFormPage />} />
               <Route path="banners/edit/:id" element={<AdminBannerFormPage />} />
               <Route path="orders" element={<AdminOrdersPage />} />
+              <Route path="coupons" element={<AdminOnlyRoute><AdminCouponsPage /></AdminOnlyRoute>} />
+              <Route path="coupons/create" element={<AdminOnlyRoute><AdminCouponFormPage /></AdminOnlyRoute>} />
+              <Route path="coupons/edit/:id" element={<AdminOnlyRoute><AdminCouponFormPage /></AdminOnlyRoute>} />
               <Route path="posts" element={<AdminPostsPage />} />
               <Route path="posts/create" element={<AdminPostFormPage />} />
               <Route path="posts/edit/:id" element={<AdminPostFormPage />} />
               <Route path="reviews" element={<AdminReviewsPage />} />
+              <Route path="chat" element={<AdminChatPage />} />
             </Route>
 
             {/* ===== TRANG USER (có Header + Footer) ===== */}
@@ -104,9 +119,13 @@ function App() {
               <Route path="/posts" element={<PostsPage />} />
               <Route path="/posts/:id" element={<PostDetailPage />} />
               <Route path="/my-orders" element={<MyOrdersPage />} />
+              <Route path="/my-orders/:id" element={<OrderDetailPage />} />
+              <Route path="/wishlist" element={<WishlistPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
 
             </Route>
           </Routes>
+        </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

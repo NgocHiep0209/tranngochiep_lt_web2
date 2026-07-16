@@ -1,7 +1,9 @@
 package com.example.fashionstore.service;
 
+import com.example.fashionstore.dto.ChangePasswordRequest;
 import com.example.fashionstore.dto.LoginRequest;
 import com.example.fashionstore.dto.LoginResponse;
+import com.example.fashionstore.dto.UpdateProfileRequest;
 import com.example.fashionstore.entity.Customer;
 import com.example.fashionstore.exception.BadRequestException;
 import com.example.fashionstore.exception.ResourceNotFoundException;
@@ -99,6 +101,32 @@ public class CustomerService {
             existing.setPassword(passwordEncoder.encode(updated.getPassword()));
         }
         return customerRepository.save(existing);
+    }
+
+    // ===== Tự phục vụ: khách hàng xem/sửa thông tin của chính mình =====
+
+    public Customer findByEmail(String email) {
+        return customerRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy khách hàng"));
+    }
+
+    // Khách hàng tự cập nhật họ tên / SĐT / địa chỉ (không được đổi email hay role ở đây)
+    public Customer updateOwnProfile(String email, UpdateProfileRequest request) {
+        Customer existing = findByEmail(email);
+        existing.setFullName(request.getFullName());
+        existing.setPhone(request.getPhone());
+        existing.setAddress(request.getAddress());
+        return customerRepository.save(existing);
+    }
+
+    // Khách hàng tự đổi mật khẩu - phải nhập đúng mật khẩu hiện tại
+    public void changeOwnPassword(String email, ChangePasswordRequest request) {
+        Customer existing = findByEmail(email);
+        if (!passwordEncoder.matches(request.getCurrentPassword(), existing.getPassword())) {
+            throw new BadRequestException("Mật khẩu hiện tại không đúng!");
+        }
+        existing.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        customerRepository.save(existing);
     }
 
     public void delete(Long id) {

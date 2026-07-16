@@ -96,7 +96,8 @@ ul { list-style: none; }
 }
 
 .header-nav a,
-.header-nav .nav-user {
+.header-nav .nav-user,
+.header-nav .nav-voucher-btn {
   color: rgba(255,255,255,0.85);
   font-size: 14px;
   font-weight: 500;
@@ -105,7 +106,8 @@ ul { list-style: none; }
   transition: var(--transition);
 }
 
-.header-nav a:hover {
+.header-nav a:hover,
+.header-nav .nav-voucher-btn:hover {
   color: var(--white);
   background: rgba(255,255,255,0.1);
 }
@@ -872,6 +874,54 @@ ul { list-style: none; }
   font-weight: 600;
 }
 
+/* Price range filter */
+.price-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-range-inputs input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 2px solid var(--light-gray);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-dark);
+  outline: none;
+  transition: var(--transition);
+}
+
+.price-range-inputs input:focus { border-color: var(--primary); }
+
+.price-range-sep { color: var(--text-light); font-size: 13px; flex-shrink: 0; }
+
+.price-range-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.filter-clear-btn {
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px 14px;
+  border: 2px solid var(--light-gray);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-medium);
+  transition: var(--transition);
+}
+
+.filter-clear-btn:hover {
+  border-color: #e55;
+  color: #e55;
+}
+
 /* Products Main */
 .products-main { }
 
@@ -879,7 +929,9 @@ ul { list-style: none; }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .products-count {
@@ -887,6 +939,33 @@ ul { list-style: none; }
   color: var(--text-light);
   font-weight: 500;
 }
+
+.products-sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.products-sort label {
+  font-size: 13px;
+  color: var(--text-medium);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.products-sort select {
+  padding: 9px 12px;
+  border: 2px solid var(--light-gray);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-dark);
+  background: var(--white);
+  outline: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.products-sort select:focus { border-color: var(--primary); }
 
 /* ============================================
    PRODUCT DETAIL
@@ -1312,6 +1391,45 @@ ul { list-style: none; }
   border-bottom: 2px solid var(--light-gray);
 }
 
+.checkout-account-info {
+  background: rgba(108, 99, 255, 0.06);
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.checkout-account-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  padding: 0;
+  border: none;
+}
+
+.checkout-account-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  padding: 4px 0;
+}
+
+.checkout-account-label {
+  color: #888;
+}
+
+.checkout-account-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #888;
+}
+
+.checkout-account-guest {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
 /* Order Success */
 .order-success {
   text-align: center;
@@ -1455,6 +1573,343 @@ ul { list-style: none; }
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 16px;
+}
+
+.alert-success {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: #10b981;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Voucher center modal (thanh điều hướng) */
+.voucher-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,26,46,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.voucher-modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.voucher-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  background: var(--primary);
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.voucher-modal-header h3 { margin: 0; font-size: 18px; }
+
+.voucher-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.8;
+  padding: 4px 8px;
+}
+
+.voucher-modal-close:hover { opacity: 1; }
+
+.voucher-modal-body {
+  padding: 20px 22px;
+  overflow-y: auto;
+}
+
+.voucher-modal-guest-note {
+  background: #faf9ff;
+  border: 1px dashed var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-medium);
+  margin-bottom: 16px;
+}
+
+.voucher-modal-guest-note a { color: var(--primary); font-weight: 700; }
+
+.voucher-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.voucher-card {
+  display: flex;
+  border: 1.5px solid var(--light-gray);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.voucher-card-left {
+  flex-shrink: 0;
+  width: 110px;
+  background: var(--primary);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px 8px;
+  gap: 4px;
+  border-right: 2px dashed rgba(255,255,255,0.25);
+}
+
+.voucher-card-value {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.voucher-card-code {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.voucher-card-right {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.voucher-card-desc {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.voucher-card-condition {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.voucher-card-btn {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 7px 16px;
+  font-size: 13px;
+}
+
+.voucher-card-btn-claimed {
+  background: rgba(16,185,129,0.1);
+  color: #10b981;
+  border: 1px solid rgba(16,185,129,0.3);
+}
+
+/* Nút mở kho voucher trên thanh điều hướng */
+.nav-voucher-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+}
+
+/* Voucher / coupon box on checkout page */
+.checkout-coupon-box {
+  margin: 16px 0;
+  padding: 16px;
+  background: #faf9ff;
+  border: 1.5px dashed var(--primary);
+  border-radius: var(--radius-sm);
+}
+
+.checkout-coupon-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.checkout-coupon-label-row .checkout-coupon-label { margin-bottom: 0; }
+
+.checkout-coupon-picker-toggle {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 8px;
+  text-decoration: underline;
+}
+
+.checkout-voucher-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--light-gray);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.checkout-voucher-picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: #faf9ff;
+}
+
+.checkout-voucher-picker-code {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: 0.5px;
+}
+
+.checkout-voucher-picker-desc {
+  display: block;
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.checkout-voucher-picker-warn {
+  display: block;
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 2px;
+}
+
+.checkout-coupon-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.checkout-coupon-row {
+  display: flex;
+  gap: 8px;
+}
+
+.checkout-coupon-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 2px solid var(--light-gray);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  outline: none;
+  transition: var(--transition);
+  background: var(--white);
+}
+
+.checkout-coupon-input::placeholder { text-transform: none; font-weight: 400; }
+
+.checkout-coupon-input:focus { border-color: var(--primary); }
+
+.checkout-coupon-input.error { border-color: var(--danger); }
+
+.checkout-coupon-apply-btn { flex-shrink: 0; white-space: nowrap; }
+
+.checkout-coupon-error {
+  display: block;
+  margin-top: 8px;
+}
+
+.checkout-coupon-applied {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: var(--radius-sm);
+}
+
+.checkout-coupon-applied-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  color: #0d9668;
+}
+
+.checkout-coupon-applied-code {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #0d9668;
+}
+
+.checkout-coupon-remove-btn {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.checkout-coupon-remove-btn:hover {
+  background: rgba(229,62,62,0.1);
+  color: var(--danger);
+}
+
+.form-checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.form-checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
 }
 
 .form-actions {
@@ -1663,6 +2118,7 @@ ul { list-style: none; }
 
 .stock-badge.in-stock { background: rgba(56,161,105,0.15); color: var(--success); }
 .stock-badge.out-stock { background: rgba(229,62,62,0.15); color: var(--danger); }
+.stock-badge.low-stock { background: rgba(59,130,246,0.15); color: #3b82f6; }
 
 .action-cell { display: flex; gap: 8px; }
 
@@ -2160,6 +2616,50 @@ ul { list-style: none; }
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 150px;
+}
+
+.admin-role-badge {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.admin-role-admin {
+  background: rgba(139, 92, 246, 0.25);
+  color: #c4b5fd;
+}
+
+.admin-role-staff {
+  background: rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+}
+
+.admin-no-permission {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 60vh;
+  gap: 8px;
+}
+
+.admin-no-permission-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.admin-no-permission h2 {
+  margin: 0;
+}
+
+.admin-no-permission p {
+  color: #888;
 }
 
 .admin-logout-btn {
@@ -2682,4 +3182,511 @@ ul { list-style: none; }
   .posts-grid { grid-template-columns: 1fr; }
   .posts-hero h1 { font-size: 26px; }
   .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================
+   WISHLIST (Yêu thích) — nút trái tim
+============================================ */
+.wishlist-heart-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease;
+}
+.wishlist-heart-btn:hover {
+  transform: scale(1.12);
+}
+.wishlist-heart-btn.active {
+  background: #fff0f0;
+}
+
+.wishlist-detail-btn {
+  border-color: var(--accent);
+}
+.wishlist-detail-btn.active {
+  background: #fff0f0;
+  border-color: #e0455f;
+  color: #e0455f;
+}
+
+/* ============================================
+   REVIEW SECTION (Đánh giá sản phẩm)
+============================================ */
+.review-section {
+  max-width: 900px;
+  margin: 48px auto 0;
+  padding: 0 16px;
+}
+.review-section-title {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #faf9f7;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.review-summary-average {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.review-summary-count {
+  color: var(--text-light);
+  font-size: 13px;
+  margin: 4px 0 0;
+}
+.review-empty {
+  color: var(--text-light);
+  padding: 16px 0;
+}
+.review-list {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.review-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+.review-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.review-item-date {
+  color: var(--text-light);
+  font-size: 12px;
+}
+.review-item-comment {
+  margin: 8px 0 0;
+  color: var(--text-medium);
+  line-height: 1.5;
+}
+.review-form-wrapper {
+  background: #faf9f7;
+  border-radius: 12px;
+  padding: 20px;
+}
+.review-login-prompt {
+  margin: 0;
+  color: var(--text-medium);
+}
+.review-form h4 {
+  margin: 0 0 12px;
+}
+.review-form-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.review-form textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 12px;
+}
+.form-error {
+  color: #d9534f;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+.form-success {
+  color: #3c9d5f;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+/* ============================================
+   ORDER DETAIL — timeline trạng thái
+============================================ */
+.order-status-timeline {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  position: relative;
+}
+.order-status-timeline::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  background: #e3e3e3;
+  z-index: 0;
+}
+.order-status-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+.order-status-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #e3e3e3;
+  border: 2px solid #fff;
+}
+.order-status-step.done .order-status-dot {
+  background: var(--accent);
+}
+.order-status-label {
+  font-size: 12px;
+  color: var(--text-light);
+  text-align: center;
+}
+.order-status-step.done .order-status-label {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .order-status-timeline { flex-wrap: wrap; row-gap: 16px; }
+  .order-status-timeline::before { display: none; }
+}
+
+/* ===========================
+   CHAT WIDGET (Khách hàng)
+=========================== */
+.chat-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.chat-widget-toggle {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.chat-widget-toggle:hover {
+  background: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+.chat-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--danger);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border: 2px solid var(--white);
+}
+
+.chat-widget-panel {
+  width: 340px;
+  max-width: calc(100vw - 48px);
+  height: 460px;
+  max-height: calc(100vh - 140px);
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: chat-pop-in 0.2s ease;
+}
+
+@keyframes chat-pop-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-widget-header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.chat-widget-header button {
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.chat-widget-header button:hover {
+  opacity: 1;
+}
+
+.chat-widget-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--off-white);
+}
+
+.chat-empty {
+  color: var(--text-light);
+  font-size: 13px;
+  text-align: center;
+  margin: auto;
+  padding: 0 12px;
+}
+
+.chat-bubble {
+  max-width: 78%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.chat-bubble p {
+  margin: 0;
+}
+
+.chat-bubble .chat-time {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.chat-bubble-me {
+  align-self: flex-end;
+  background: var(--primary);
+  color: var(--white);
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble-other {
+  align-self: flex-start;
+  background: var(--light-gray);
+  color: var(--text-dark);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-widget-input {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--mid-gray);
+  background: var(--white);
+}
+
+.chat-widget-input input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--mid-gray);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.chat-widget-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.chat-widget-input button {
+  padding: 9px 16px;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.chat-widget-input button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.chat-widget-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .chat-widget { bottom: 16px; right: 16px; }
+  .chat-widget-panel { width: calc(100vw - 32px); height: 70vh; }
+}
+
+/* ===========================
+   ADMIN CHAT PAGE
+=========================== */
+.admin-chat-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  height: 640px;
+}
+
+.admin-chat-list {
+  border-right: 1px solid var(--light-gray);
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.admin-chat-item {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 4px;
+}
+
+.admin-chat-item:hover {
+  background: var(--off-white);
+}
+
+.admin-chat-item.active {
+  background: var(--light-gray);
+}
+
+.admin-chat-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-chat-item-top strong {
+  font-size: 14px;
+  color: var(--text-dark);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-chat-item .chat-badge {
+  position: static;
+  border: none;
+}
+
+.admin-chat-preview {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--text-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-chat-time {
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+.admin-chat-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.admin-chat-window-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--light-gray);
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.admin-chat-window-header span {
+  color: var(--text-light);
+  font-weight: 400;
+}
+
+.admin-chat-body {
+  flex: 1;
+}
+
+.chat-empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.admin-nav-badge {
+  margin-left: auto;
+  position: static;
+}
+
+@media (max-width: 900px) {
+  .admin-chat-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .admin-chat-list {
+    border-right: none;
+    border-bottom: 1px solid var(--light-gray);
+    max-height: 260px;
+  }
+  .admin-chat-window {
+    height: 480px;
+  }
 }

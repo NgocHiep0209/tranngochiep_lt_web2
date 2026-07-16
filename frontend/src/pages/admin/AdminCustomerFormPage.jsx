@@ -156,9 +156,15 @@ function AdminCustomerFormPage() {
               <div className="form-group">
                 <label>Vai trò</label>
                 <select name="role" value={form.role} onChange={handleChange}>
-                  <option value="USER">Thành viên</option>
-                  <option value="ADMIN">Admin</option>
+                  <option value="USER">Khách hàng (mua sắm)</option>
+                  <option value="STAFF">Thành viên (quản lý trang admin)</option>
+                  <option value="ADMIN">Admin (toàn quyền)</option>
                 </select>
+                <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>
+                  <strong>Khách hàng:</strong> chỉ đăng nhập mua hàng. <strong>Thành viên:</strong> vào được trang
+                  admin để quản lý sản phẩm/đơn hàng/nội dung, nhưng không xem được mục Quản lý thành viên và Mã
+                  giảm giá. <strong>Admin:</strong> toàn quyền, kể cả 2 mục trên.
+                </p>
               </div>
 
               <div className="form-group">

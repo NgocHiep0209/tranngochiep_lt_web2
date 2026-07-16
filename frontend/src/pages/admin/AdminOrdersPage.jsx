@@ -219,6 +219,11 @@ function AdminOrdersPage() {
                         <td>#{order.id}</td>
                         <td>
                           <strong>{order.customerName}</strong>
+                          {order.couponCode && (
+                            <p style={{ color: '#6c63ff', fontSize: '12px', margin: '2px 0 0' }}>
+                              🎟️ {order.couponCode} (-{formatPrice(order.discountAmount)})
+                            </p>
+                          )}
                           {order.note && (
                             <p style={{ color: '#999', fontSize: '12px', margin: '2px 0 0' }}>
                               📝 {order.note}

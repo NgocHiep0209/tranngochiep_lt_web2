@@ -25,7 +25,11 @@ public class UploadController {
         if (file.isEmpty()) {
             throw new BadRequestException("Vui lòng chọn ảnh để upload");
         }
-        if (!ALLOWED_TYPES.contains(file.getContentType())) {
+        String contentType = file.getContentType();
+        // contentType có thể null nếu request không đúng định dạng multipart/form-data
+        // (VD: frontend gửi nhầm Content-Type: application/json). Set.of(...).contains(null)
+        // sẽ ném NullPointerException -> lỗi 500 khó hiểu, nên phải kiểm tra null trước.
+        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
             throw new BadRequestException("Chỉ chấp nhận ảnh JPG, PNG, WEBP, GIF");
         }
         if (file.getSize() > 5 * 1024 * 1024) {

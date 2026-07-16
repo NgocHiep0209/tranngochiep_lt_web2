@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import bannerService from '../../services/bannerService';
 import AdminSidebar from '../../components/admin/AdminSidebar';
+import uploadService from '../../services/uploadService';
 
 const initialForm = {
   title: '',
@@ -21,6 +22,7 @@ function AdminBannerFormPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(isEdit);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (isEdit) {
@@ -53,8 +55,28 @@ function AdminBannerFormPage() {
     return newErrors;
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const res = await uploadService.uploadImage(file);
+      setForm((prev) => ({ ...prev, imageUrl: res.url }));
+      setErrors((prev) => ({ ...prev, imageUrl: '' }));
+    } catch (err) {
+      alert(err.response?.data?.message || 'Upload ảnh thất bại!');
+      console.error(err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (uploading) {
+      alert('Ảnh đang được tải lên, vui lòng đợi upload xong rồi mới lưu.');
+      return;
+    }
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -157,14 +179,17 @@ function AdminBannerFormPage() {
             </div>
 
             <div className="form-group">
-              <label>Link ảnh banner *</label>
+              <label>Ảnh banner *</label>
+              <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
+              {uploading && <span> Đang tải ảnh lên...</span>}
               <input
                 type="text"
                 name="imageUrl"
                 value={form.imageUrl}
                 onChange={handleChange}
-                placeholder="https://example.com/banner.jpg"
+                placeholder="Hoặc dán link ảnh trực tiếp"
                 className={errors.imageUrl ? 'error' : ''}
+                style={{ marginTop: 8 }}
               />
               {errors.imageUrl && <span className="error-msg">{errors.imageUrl}</span>}
               {form.imageUrl && (
@@ -191,8 +216,8 @@ function AdminBannerFormPage() {
             </div>
 
             <div className="form-actions">
-              <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
-                {loading ? 'Đang lưu...' : (isEdit ? '💾 Cập nhật' : '➕ Thêm banner')}
+              <button type="submit" className="btn btn-primary btn-lg" disabled={loading || uploading}>
+                {uploading ? 'Đang tải ảnh lên...' : loading ? 'Đang lưu...' : (isEdit ? '💾 Cập nhật' : '➕ Thêm banner')}
               </button>
               <button
                 type="button"

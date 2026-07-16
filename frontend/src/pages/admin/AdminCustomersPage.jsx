@@ -85,7 +85,8 @@ function AdminCustomersPage() {
               onChange={(e) => setRoleFilter(e.target.value)}
             >
               <option value="">Tất cả vai trò</option>
-              <option value="USER">Thành viên</option>
+              <option value="USER">Khách hàng</option>
+              <option value="STAFF">Thành viên</option>
               <option value="ADMIN">Admin</option>
             </select>
           </form>
@@ -128,8 +129,8 @@ function AdminCustomersPage() {
                         <td>{c.phone || '-'}</td>
                         <td style={{ maxWidth: '200px', wordBreak: 'break-word' }}>{c.address || '-'}</td>
                         <td>
-                          <span className={`stock-badge ${c.role === 'ADMIN' ? 'out-stock' : 'in-stock'}`}>
-                            {c.role === 'ADMIN' ? 'Admin' : 'Thành viên'}
+                          <span className={`stock-badge ${c.role === 'ADMIN' ? 'out-stock' : c.role === 'STAFF' ? 'low-stock' : 'in-stock'}`}>
+                            {c.role === 'ADMIN' ? 'Admin' : c.role === 'STAFF' ? 'Thành viên' : 'Khách hàng'}
                           </span>
                         </td>
                         <td className="action-cell">

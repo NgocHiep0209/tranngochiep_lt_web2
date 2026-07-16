@@ -30,6 +30,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
+    private final CouponService couponService;
 
     public List<Order> findAll() {
         return orderRepository.findAll();
@@ -83,7 +84,18 @@ public class OrderService {
             total += product.getPrice() * detailReq.getQuantity();
         }
 
-        order.setTotalAmount(total);
+        // Áp dụng mã giảm giá (nếu có) - tính trên tổng tiền hàng trước giảm giá
+        double discount = 0;
+        String couponCode = request.getCouponCode();
+        if (couponCode != null && !couponCode.trim().isEmpty()) {
+            discount = couponService.applyCoupon(couponCode, total);
+            // Nếu đây là voucher khách đã "nhận" trước đó (ví voucher), đánh dấu đã dùng
+            couponService.markClaimedAsUsed(request.getCustomerId(), couponCode);
+        }
+
+        order.setTotalAmount(total - discount);
+        order.setCouponCode(discount > 0 ? couponCode.trim().toUpperCase() : null);
+        order.setDiscountAmount(discount);
         order.setOrderDetails(details);
 
         return orderRepository.save(order);

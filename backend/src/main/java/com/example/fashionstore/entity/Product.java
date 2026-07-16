@@ -53,4 +53,9 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    // Không lưu DB, chỉ gắn thêm khi trả về danh sách "sản phẩm được yêu thích nhất"
+    // để FE hiển thị số lượt yêu thích (giống cách Wishlist gắn thêm productName).
+    @Transient
+    private Long favoriteCount;
 }

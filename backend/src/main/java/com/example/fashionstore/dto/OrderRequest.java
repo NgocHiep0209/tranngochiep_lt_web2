@@ -23,6 +23,9 @@ public class OrderRequest {
 
     private String note;
 
+    // Mã giảm giá khách nhập lúc checkout (tùy chọn)
+    private String couponCode;
+
     @NotEmpty(message = "Đơn hàng phải có ít nhất 1 sản phẩm")
     @Valid
     private List<OrderDetailRequest> orderDetails;

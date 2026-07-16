@@ -79,6 +79,13 @@ function MyOrdersPage() {
                   <p><strong>Người nhận:</strong> {order.customerName} - {order.customerPhone}</p>
                   <p><strong>Địa chỉ:</strong> {order.customerAddress}</p>
                   {order.note && <p><strong>Ghi chú:</strong> {order.note}</p>}
+                  {order.couponCode && (
+                    <p>
+                      <strong>Mã giảm giá:</strong>{' '}
+                      <span style={{ color: '#6c63ff', fontWeight: 600 }}>🎟️ {order.couponCode}</span>
+                      {' '}(-{formatPrice(order.discountAmount)})
+                    </p>
+                  )}
                   <table style={{ width: '100%', marginTop: 12 }}>
                     <thead>
                       <tr><th style={{ textAlign: 'left' }}>Sản phẩm</th><th>SL</th><th style={{ textAlign: 'right' }}>Giá</th></tr>
@@ -93,6 +100,16 @@ function MyOrdersPage() {
                       ))}
                     </tbody>
                   </table>
+                  {order.couponCode && (
+                    <div style={{ textAlign: 'right', marginTop: 8, fontSize: 13, color: '#888' }}>
+                      Tạm tính: {formatPrice(order.totalAmount + (order.discountAmount || 0))} — Giảm giá: -{formatPrice(order.discountAmount)}
+                    </div>
+                  )}
+                  <div style={{ textAlign: 'right', marginTop: 12 }}>
+                    <Link to={`/my-orders/${order.id}`} className="btn btn-outline">
+                      Xem chi tiết đầy đủ →
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>

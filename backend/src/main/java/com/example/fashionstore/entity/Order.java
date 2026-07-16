@@ -37,6 +37,13 @@ public class Order {
 
     private Double totalAmount;
 
+    // Mã giảm giá đã áp dụng cho đơn hàng này (nếu có)
+    @Column(length = 50)
+    private String couponCode;
+
+    // Số tiền đã được giảm nhờ voucher (0 nếu không dùng mã)
+    private Double discountAmount;
+
     @Column(columnDefinition = "TEXT")
     private String note;
 

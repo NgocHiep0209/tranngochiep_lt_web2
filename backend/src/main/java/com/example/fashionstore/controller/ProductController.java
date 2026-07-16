@@ -60,7 +60,10 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) String keyword) {
-        return ResponseEntity.ok(productService.findPaged(page, size, categoryId, keyword));
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String sort) {
+        return ResponseEntity.ok(productService.findPaged(page, size, categoryId, keyword, minPrice, maxPrice, sort));
     }
 }
